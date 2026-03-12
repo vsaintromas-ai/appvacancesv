@@ -434,10 +434,19 @@ function AddPropertyModal({ onClose, onAdd, currentUserId }) {
     setFetching(true);
     setFetchMsg({text:"Récupération des informations…",error:false});
     try {
-      const proxied = `https://corsproxy.io/?url=${encodeURIComponent(f.url)}`;
-      const resp = await fetch(proxied);
-      if(!resp.ok) throw new Error("HTTP "+resp.status);
-      const html = await resp.text();
+      const proxies = [
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(f.url)}`,
+        `https://corsproxy.io/?url=${encodeURIComponent(f.url)}`,
+        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(f.url)}`,
+      ];
+      let html = "";
+      for (const proxied of proxies) {
+        try {
+          const resp = await fetch(proxied, { signal: AbortSignal.timeout(8000) });
+          if (resp.ok) { html = await resp.text(); break; }
+        } catch { /* essaie le proxy suivant */ }
+      }
+      if (!html) throw new Error("Tous les proxies ont échoué");
       const doc  = new DOMParser().parseFromString(html,"text/html");
 
       // Open Graph helpers

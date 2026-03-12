@@ -5,6 +5,10 @@ const EMAILJS_SERVICE  = "service_zp881x8";
 const EMAILJS_TEMPLATE = "template_g2c9alk";
 const EMAILJS_KEY      = "wDsY0mLjksWDdb0YT";
 
+// 👉 Remplace par l'URL de ton app déployée (ex: "https://appvacances.netlify.app")
+// En développement, le lien sera localhost mais fonctionnel sur la même machine
+const APP_BASE_URL = window.location.origin;
+
 const PLATFORMS = {
   airbnb:  { name:"Airbnb",   color:"#FF5A5F", icon:"🏠" },
   abritel: { name:"Abritel",  color:"#4A90D9", icon:"🏡" },
@@ -220,17 +224,39 @@ function TripHeaderEdit({ trip, onUpdate }) {
 
 // ─── People Modal ─────────────────────────────────────────────────────────────
 
+function buildTripInviteUrl(trip) {
+  return `${APP_BASE_URL}/?trip=${trip.id}`;
+}
+
+function formatPropertiesForEmail(trip) {
+  if (!trip.properties || trip.properties.length === 0) return "Aucun hébergement ajouté pour l'instant.";
+  return trip.properties.map((p, i) => {
+    const platform = PLATFORMS[p.platform]?.name || p.platform;
+    const price = p.price ? `${p.price}€` : "";
+    const nights = p.nights ? ` / ${p.nights} nuits` : "";
+    const rating = p.rating ? ` ⭐ ${p.rating}` : "";
+    return `${i + 1}. ${p.title} — ${platform} — ${p.location}${rating}\n   ${price}${nights}`;
+  }).join("\n");
+}
+
 async function sendInviteEmail(person, trip, senderName) {
+  const tripUrl = buildTripInviteUrl(trip);
+  const membersCount = (trip.members || []).length;
+  const propertiesText = formatPropertiesForEmail(trip);
+
   await emailjs.send(
     EMAILJS_SERVICE,
     EMAILJS_TEMPLATE,
     {
-      to_name:    person.name,
-      to_email:   person.email,
-      from_name:  senderName,
-      trip_name:  trip.name,
-      trip_emoji: trip.emoji,
-      trip_dates: trip.dates ? ` (${trip.dates})` : "",
+      to_name:          person.name,
+      to_email:         person.email,
+      from_name:        senderName,
+      trip_name:        trip.name,
+      trip_emoji:       trip.emoji || "🏖️",
+      trip_dates:       trip.dates || "Dates à définir",
+      trip_url:         tripUrl,
+      members_count:    String(membersCount),
+      properties_list:  propertiesText,
     },
     EMAILJS_KEY
   );
@@ -798,7 +824,9 @@ export default function App() {
       const u=localStorage.getItem("sejours:currentUser");
       setTrips(t?JSON.parse(t):INITIAL_TRIPS);
       setPeople(p?JSON.parse(p):INITIAL_PEOPLE);
-      if(a) setActiveTrip(a);
+      const urlTrip = new URLSearchParams(window.location.search).get("trip");
+      if(urlTrip) setActiveTrip(urlTrip);
+      else if(a) setActiveTrip(a);
       if(u) setCurrentUserId(u);
     } catch {
       setTrips(INITIAL_TRIPS);

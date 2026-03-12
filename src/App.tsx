@@ -7,7 +7,7 @@ const EMAILJS_SERVICE  = "service_zp881x8";
 const EMAILJS_TEMPLATE = "template_g2c9alk";
 const EMAILJS_KEY      = "wDsY0mLjksWDdb0YT";
 
-const APP_BASE_URL = "https://vsaintromas-ai.github.io/appvacancesv";
+const APP_BASE_URL = "https://appvacancesv.vercel.app";
 
 const PLATFORMS = {
   airbnb:  { name:"Airbnb",   color:"#FF5A5F", icon:"🏠" },

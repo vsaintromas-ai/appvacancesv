@@ -663,7 +663,7 @@ function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, on
               style={{ background:"#0d0d1eaa",border:"1px solid #2a2a3e",borderRadius:6,color:"#555",fontSize:13,width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",lineHeight:1 }}>🗑</button>
           )}
         </div>
-        {isWinner&&<div style={{ position:"absolute",top:10,right:10,background:"#c9a96e",color:"#0a0a14",borderRadius:20,padding:"3px 10px",fontSize:13,fontWeight:800,fontFamily:"'Cormorant Garamond',serif" }}>€{p.price*p.nights}</div>}
+        {isWinner&&<div style={{ position:"absolute",bottom:10,right:10,background:"#c9a96e",color:"#0a0a14",borderRadius:20,padding:"3px 10px",fontSize:13,fontWeight:800,fontFamily:"'Cormorant Garamond',serif" }}>€{p.price*p.nights}</div>}
         {!isWinner&&<div style={{ position:"absolute",bottom:10,right:10,background:"#c9a96e",color:"#0a0a14",borderRadius:20,padding:"3px 10px",fontSize:13,fontWeight:800,fontFamily:"'Cormorant Garamond',serif" }}>€{p.price*p.nights}</div>}
       </div>
       <div style={{ padding:"12px 14px",flex:1,display:"flex",flexDirection:"column",gap:7 }}>

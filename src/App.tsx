@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { db } from "./firebase";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 
 const EMAILJS_SERVICE  = "service_zp881x8";
@@ -822,31 +824,49 @@ export default function App() {
   const [showNewTrip, setShowNewTrip]   = useState(false);
   const [showPeople, setShowPeople]     = useState(false);
 
-  // Load from storage — saved data always wins
+  // Préférences locales (par utilisateur)
   useEffect(()=>{
-    try {
-      const t=localStorage.getItem("sejours:trips");
-      const p=localStorage.getItem("sejours:people");
-      const a=localStorage.getItem("sejours:activeTrip");
-      const u=localStorage.getItem("sejours:currentUser");
-      setTrips(t?JSON.parse(t):INITIAL_TRIPS);
-      setPeople(p?JSON.parse(p):INITIAL_PEOPLE);
-      const urlTrip = new URLSearchParams(window.location.search).get("trip");
-      if(urlTrip) setActiveTrip(urlTrip);
-      else if(a) setActiveTrip(a);
-      if(u) setCurrentUserId(u);
-    } catch {
-      setTrips(INITIAL_TRIPS);
-      setPeople(INITIAL_PEOPLE);
-    }
-    setLoaded(true);
+    const a = localStorage.getItem("sejours:activeTrip");
+    const u = localStorage.getItem("sejours:currentUser");
+    const urlTrip = new URLSearchParams(window.location.search).get("trip");
+    if(urlTrip) setActiveTrip(urlTrip);
+    else if(a) setActiveTrip(a);
+    if(u) setCurrentUserId(u);
   },[]);
-
-  // Persist after load
-  useEffect(()=>{ if(loaded&&trips!==null)  localStorage.setItem("sejours:trips",  JSON.stringify(trips));  },[trips,loaded]);
-  useEffect(()=>{ if(loaded&&people!==null) localStorage.setItem("sejours:people", JSON.stringify(people)); },[people,loaded]);
   useEffect(()=>{ if(loaded) localStorage.setItem("sejours:activeTrip",  activeTrip);    },[activeTrip,loaded]);
   useEffect(()=>{ if(loaded) localStorage.setItem("sejours:currentUser", currentUserId); },[currentUserId,loaded]);
+
+  // Sync temps réel avec Firestore
+  useEffect(()=>{
+    const ref = doc(db, "appdata", "main");
+    const unsub = onSnapshot(ref, (snap) => {
+      if(snap.exists()) {
+        const data = snap.data();
+        setTrips(data.trips   ?? INITIAL_TRIPS);
+        setPeople(data.people ?? INITIAL_PEOPLE);
+      } else {
+        // Premier lancement : initialise Firestore avec les données de démo
+        setDoc(ref, { trips: INITIAL_TRIPS, people: INITIAL_PEOPLE });
+        setTrips(INITIAL_TRIPS);
+        setPeople(INITIAL_PEOPLE);
+      }
+      setLoaded(true);
+    }, () => {
+      // Erreur réseau : fallback localStorage
+      const t = localStorage.getItem("sejours:trips");
+      const p = localStorage.getItem("sejours:people");
+      setTrips(t ? JSON.parse(t) : INITIAL_TRIPS);
+      setPeople(p ? JSON.parse(p) : INITIAL_PEOPLE);
+      setLoaded(true);
+    });
+    return () => unsub();
+  },[]);
+
+  // Sauvegarde dans Firestore à chaque modification
+  useEffect(()=>{
+    if(!loaded || trips===null || people===null) return;
+    setDoc(doc(db, "appdata", "main"), { trips, people });
+  },[trips, people, loaded]);
 
   const safeTrips  = trips  || [];
   const safePeople = people || [];

@@ -5,9 +5,7 @@ const EMAILJS_SERVICE  = "service_zp881x8";
 const EMAILJS_TEMPLATE = "template_g2c9alk";
 const EMAILJS_KEY      = "wDsY0mLjksWDdb0YT";
 
-// 👉 Remplace par l'URL de ton app déployée (ex: "https://appvacances.netlify.app")
-// En développement, le lien sera localhost mais fonctionnel sur la même machine
-const APP_BASE_URL = window.location.origin;
+const APP_BASE_URL = "https://vsaintromas-ai.github.io/appvacancesv";
 
 const PLATFORMS = {
   airbnb:  { name:"Airbnb",   color:"#FF5A5F", icon:"🏠" },

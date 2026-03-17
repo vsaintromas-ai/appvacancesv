@@ -858,23 +858,26 @@ export default function App() {
   useEffect(()=>{ if(loaded) localStorage.setItem("sejours:activeTrip",  activeTrip);    },[activeTrip,loaded]);
   useEffect(()=>{ if(loaded) localStorage.setItem("sejours:currentUser", currentUserId); },[currentUserId,loaded]);
 
+  // Flag pour distinguer changement local vs snapshot Firestore
+  const fromFirestore = useRef(false);
+
   // Sync temps réel avec Firestore
   useEffect(()=>{
     const ref = doc(db, "appdata", "main");
     const unsub = onSnapshot(ref, (snap) => {
       if(snap.exists()) {
         const data = snap.data();
+        fromFirestore.current = true;
         setTrips(data.trips   ?? INITIAL_TRIPS);
         setPeople(data.people ?? INITIAL_PEOPLE);
       } else {
-        // Premier lancement : initialise Firestore avec les données de démo
         setDoc(ref, { trips: INITIAL_TRIPS, people: INITIAL_PEOPLE });
+        fromFirestore.current = true;
         setTrips(INITIAL_TRIPS);
         setPeople(INITIAL_PEOPLE);
       }
       setLoaded(true);
     }, () => {
-      // Erreur réseau : fallback localStorage
       const t = localStorage.getItem("sejours:trips");
       const p = localStorage.getItem("sejours:people");
       setTrips(t ? JSON.parse(t) : INITIAL_TRIPS);
@@ -884,9 +887,10 @@ export default function App() {
     return () => unsub();
   },[]);
 
-  // Sauvegarde dans Firestore à chaque modification
+  // Sauvegarde dans Firestore uniquement si le changement vient de l'utilisateur
   useEffect(()=>{
     if(!loaded || trips===null || people===null) return;
+    if(fromFirestore.current) { fromFirestore.current = false; return; }
     setDoc(doc(db, "appdata", "main"), { trips, people });
   },[trips, people, loaded]);
 

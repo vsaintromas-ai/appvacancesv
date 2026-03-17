@@ -599,7 +599,7 @@ function avgRating(p) {
   return vals.reduce((a,b)=>a+b,0)/vals.length;
 }
 
-function StarRatingBar({ property:p, currentUserId, people, onRate }) {
+function StarRatingBar({ property:p, currentUserId, people, onRate, isWinner }) {
   const [hover, setHover] = useState(0);
   const myRating = (p.ratings||{})[currentUserId]||0;
   const avg = avgRating(p);
@@ -623,10 +623,11 @@ function StarRatingBar({ property:p, currentUserId, people, onRate }) {
 
         {/* Average */}
         {avg!==null&&(
-          <div style={{ marginLeft:"auto",display:"flex",alignItems:"center",gap:5 }}>
+          <div style={{ marginLeft:"auto",display:"flex",alignItems:"center",gap:5,background:isWinner?"#fff8ed":"transparent",borderRadius:20,padding:isWinner?"3px 10px":"0",border:isWinner?"1px solid #c9a96e55":"none" }}>
+            {isWinner&&<span style={{ fontSize:12 }}>🏆</span>}
             <span style={{ fontSize:10,color:"#555" }}>Moyenne :</span>
-            <span style={{ fontSize:14,color:"#F4C542",fontWeight:800 }}>{avg.toFixed(1)}</span>
-            <span style={{ fontSize:12,color:"#F4C542" }}>★</span>
+            <span style={{ fontSize:14,color:"#c9a96e",fontWeight:800 }}>{avg.toFixed(1)}</span>
+            <span style={{ fontSize:12,color:"#c9a96e" }}>★</span>
             <span style={{ fontSize:10,color:"#444" }}>({raters.length} avis)</span>
           </div>
         )}
@@ -652,14 +653,14 @@ function StarRatingBar({ property:p, currentUserId, people, onRate }) {
 
 // ─── Property Card ────────────────────────────────────────────────────────────
 
-function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, onDelete, onEdit, isWinner }) {
+function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, onEditNote, onDelete, onEdit, isWinner }) {
   const [noteText,setNoteText]=useState(""); const [showNote,setShowNote]=useState(false);
   const [confirmDelete,setConfirmDelete]=useState(false);
+  const [editNoteIdx,setEditNoteIdx]=useState(null); const [editNoteText,setEditNoteText]=useState("");
   const person=id=>people.find(u=>u.id===id);
   const avg=avgRating(p);
   return (
-    <div style={{ background:"#FFFFFF",border:`1px solid ${isWinner?"#c9a96e":"#181828"}`,borderRadius:16,overflow:"hidden",display:"flex",flexDirection:"column",boxShadow:isWinner?"0 0 0 1px #c9a96e44,0 8px 32px #c9a96e18":"none" }}>
-      {isWinner&&<div style={{ background:"linear-gradient(90deg,#c9a96e,#e8c98a)",padding:"4px 14px",fontSize:9,fontWeight:800,color:"#0a0a14",letterSpacing:2,textTransform:"uppercase" }}>✦ Favori du groupe</div>}
+    <div style={{ background:"#FFFFFF",border:`1px solid ${isWinner?"#c9a96e":"#E8E2D8"}`,borderRadius:16,overflow:"hidden",display:"flex",flexDirection:"column",boxShadow:isWinner?"0 0 0 2px #c9a96e55,0 8px 32px #c9a96e22":"0 1px 4px rgba(0,0,0,0.06)" }}>
       <div style={{ position:"relative",height:145,overflow:"hidden",flexShrink:0 }}>
         <img src={p.image} alt={p.title} style={{ width:"100%",height:"100%",objectFit:"cover",display:"block" }} />
         <div style={{ position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 40%,rgba(255,255,255,0.85) 100%)" }} />
@@ -695,7 +696,7 @@ function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, on
           <div style={{ background:"#FFF5F5",borderRadius:8,padding:"6px 8px" }}><div style={{ fontSize:9,color:"#f87171",fontWeight:700,marginBottom:3,textTransform:"uppercase",letterSpacing:1 }}>Contre</div>{p.cons.map((x,i)=><div key={i} style={{ fontSize:10,color:"#DC2626",lineHeight:1.4 }}>✗ {x}</div>)}</div>
         </div>
         {/* Star rating */}
-        <StarRatingBar property={p} currentUserId={currentUserId} people={people} onRate={onRate} />
+        <StarRatingBar property={p} currentUserId={currentUserId} people={people} onRate={onRate} isWinner={isWinner} />
 
         {/* Notes section */}
         <div style={{ background:"#F4F1EC",borderRadius:10,padding:"8px 10px",border:"1px solid #141428" }}>
@@ -705,8 +706,21 @@ function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, on
             <div key={i} style={{ display:"flex",gap:8,marginBottom:6,alignItems:"flex-start" }}>
               {u&&<Avatar name={u.name} color={u.color} size={20} style={{ flexShrink:0,marginTop:1 }} />}
               <div style={{ background:"#F5F2EE",borderRadius:8,padding:"5px 9px",flex:1,border:"1px solid #E0D9CE" }}>
-                <span style={{ color:u?.color||"#c9a96e",fontWeight:700,fontSize:11 }}>{u?.name||"?"} </span>
-                <span style={{ fontSize:11,color:"#bbb" }}>{note.text}</span>
+                {editNoteIdx===i?(
+                  <div style={{ display:"flex",gap:4 }}>
+                    <Input value={editNoteText} onChange={setEditNoteText} autoFocus style={{ fontSize:11,flex:1 }}
+                      onKeyDown={e=>{ if(e.key==="Enter"&&editNoteText.trim()){onEditNote(p.id,i,editNoteText);setEditNoteIdx(null);} if(e.key==="Escape")setEditNoteIdx(null); }} />
+                    <Btn variant="gold" onClick={()=>{ if(editNoteText.trim()){onEditNote(p.id,i,editNoteText);setEditNoteIdx(null);} }} style={{ padding:"3px 8px",fontSize:11 }}>✓</Btn>
+                    <Btn variant="ghost" onClick={()=>setEditNoteIdx(null)} style={{ padding:"3px 8px",fontSize:11 }}>✕</Btn>
+                  </div>
+                ):(
+                  <div style={{ display:"flex",alignItems:"center",gap:4 }}>
+                    <span style={{ color:u?.color||"#c9a96e",fontWeight:700,fontSize:11 }}>{u?.name||"?"} </span>
+                    <span style={{ fontSize:11,color:"#555",flex:1 }}>{note.text}</span>
+                    <button onClick={()=>{ setEditNoteIdx(i); setEditNoteText(note.text); }}
+                      style={{ background:"none",border:"none",color:"#C5BFAA",cursor:"pointer",fontSize:12,padding:"0 2px",lineHeight:1 }} title="Modifier">✎</button>
+                  </div>
+                )}
               </div>
             </div>
           ); })}
@@ -776,9 +790,11 @@ function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
   const handleDelete=pid=>onUpdateTrip({...trip,properties:trip.properties.filter(p=>p.id!==pid)});
   const handleEdit=updated=>onUpdateTrip({...trip,properties:trip.properties.map(p=>p.id===updated.id?updated:p)});
   const handleRate=(pid,val)=>onUpdateTrip({...trip,properties:trip.properties.map(p=>p.id!==pid?p:{...p,ratings:{...(p.ratings||{}), [currentUserId]:val}})});
+  const handleEditNote=(pid,idx,text)=>onUpdateTrip({...trip,properties:trip.properties.map(p=>p.id!==pid?p:{...p,notes:p.notes.map((n,i)=>i===idx?{...n,text}:n)})});
 
   const filtered=trip.properties.filter(p=>filter==="all"||p.platform===filter).sort((a,b)=>sort==="votes"?b.votes.length-a.votes.length:sort==="rating"?b.rating-a.rating:(a.price*a.nights)-(b.price*b.nights));
-  const top=[...trip.properties].sort((a,b)=>b.votes.length-a.votes.length)[0];
+  const topByRating = [...trip.properties].filter(p=>avgRating(p)!==null).sort((a,b)=>(avgRating(b)||0)-(avgRating(a)||0));
+  const top = topByRating[0] || null;
   const totalVoters=[...new Set(trip.properties.flatMap(p=>p.votes))].length;
 
   return (
@@ -804,7 +820,7 @@ function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
           <span>{trip.properties.length} logement{trip.properties.length>1?"s":""}</span>
           <span style={{ color:"#1a1a28" }}>·</span>
           <span>{totalVoters} vote{totalVoters!==1?"s":""} au total</span>
-          {top&&top.votes.length>0&&<><span style={{ color:"#1a1a28" }}>·</span><span style={{ color:"#c9a96e" }}>✦ Favori : <b>{top.title}</b> ({top.votes.length} vote{top.votes.length>1?"s":""})</span></>}
+          {top&&<><span style={{ color:"#9A9080" }}>·</span><span style={{ color:"#c9a96e" }}>🏆 Favori : <b>{top.title}</b> ({avgRating(top)?.toFixed(1)}/5)</span></>}
         </div>
       )}
       {view==="list"?(
@@ -818,7 +834,7 @@ function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
             </div>
           ):(
             <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:12 }}>
-              {filtered.map(p=><PropertyCard key={p.id} property={p} people={people} currentUserId={currentUserId} onVote={handleVote} onRate={handleRate} onAddNote={handleNote} onDelete={handleDelete} onEdit={setEditProperty} isWinner={top&&top.id===p.id&&top.votes.length>0} />)}
+              {filtered.map(p=><PropertyCard key={p.id} property={p} people={people} currentUserId={currentUserId} onVote={handleVote} onRate={handleRate} onAddNote={handleNote} onEditNote={handleEditNote} onDelete={handleDelete} onEdit={setEditProperty} isWinner={top?.id===p.id} />)}
               <div onClick={()=>setShowAdd(true)} style={{ border:"1px dashed #D5CFCA",borderRadius:16,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:40,cursor:"pointer",minHeight:160,background:"#F4F1EC",color:"#C5BFAA" }} onMouseEnter={e=>{e.currentTarget.style.borderColor="#c9a96e44";e.currentTarget.style.color="#c9a96e55";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#1a1a28";e.currentTarget.style.color="#2a2a3e";}}>
                 <span style={{ fontSize:26,marginBottom:6 }}>✦</span>
                 <span style={{ fontSize:12,fontFamily:"'Cormorant Garamond',serif" }}>Ajouter un logement</span>

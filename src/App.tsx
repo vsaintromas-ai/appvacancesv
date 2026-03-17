@@ -400,8 +400,16 @@ function NewTripModal({ people, onClose, onCreate }) {
 
 // ─── Add Property Modal ───────────────────────────────────────────────────────
 
-function AddPropertyModal({ onClose, onAdd, currentUserId }) {
-  const [f,setF]=useState({title:"",url:"",platform:"airbnb",location:"",price:"",nights:"",rating:"",pros:"",cons:"",image:""});
+function AddPropertyModal({ onClose, onAdd, onEdit, initialProperty, currentUserId }) {
+  const isEdit = !!initialProperty;
+  const [f,setF]=useState(isEdit ? {
+    ...initialProperty,
+    price:  String(initialProperty.price||""),
+    nights: String(initialProperty.nights||""),
+    rating: String(initialProperty.rating||""),
+    pros:   (initialProperty.pros||[]).join(", "),
+    cons:   (initialProperty.cons||[]).join(", "),
+  } : {title:"",url:"",platform:"airbnb",location:"",price:"",nights:"",rating:"",pros:"",cons:"",image:""});
   const [priceMode,setPriceMode]=useState("nuit"); // "nuit" | "total"
   const [fetching,setFetching]=useState(false);
   const [fetchMsg,setFetchMsg]=useState({text:"",error:false});
@@ -529,7 +537,7 @@ function AddPropertyModal({ onClose, onAdd, currentUserId }) {
   }
 
   return (
-    <Modal onClose={onClose} title="✦ Ajouter un logement" width={500}>
+    <Modal onClose={onClose} title={isEdit ? "✦ Modifier le logement" : "✦ Ajouter un logement"} width={500}>
       {/* ── URL + bouton fetch ── */}
       <div style={{ background:"#0a0a18",border:"1px solid #1e1e30",borderRadius:10,padding:"12px 14px",marginBottom:14 }}>
         <Label>Lien du logement (Airbnb, Booking, Abritel, Vrbo…)</Label>
@@ -573,7 +581,13 @@ function AddPropertyModal({ onClose, onAdd, currentUserId }) {
       </div>
       <div style={{ display:"flex",gap:10,marginTop:20 }}>
         <Btn variant="ghost" onClick={onClose} style={{ flex:1 }}>Annuler</Btn>
-        <Btn variant="gold" onClick={()=>{ if(!f.title||!f.location) return; onAdd({id:"p"+Date.now(),title:f.title,url:f.url||"#",platform:f.platform,location:f.location,lat:43+Math.random()*5,lng:2+Math.random()*8,price:parseFloat(f.price)||0,nights:parseInt(f.nights)||1,rating:Math.min(5,parseFloat(f.rating)||4),image:f.image||"https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&q=80",pros:f.pros.split(",").map(s=>s.trim()).filter(Boolean),cons:f.cons.split(",").map(s=>s.trim()).filter(Boolean),addedBy:currentUserId,votes:[currentUserId],notes:[]}); onClose(); }} style={{ flex:2 }}>Ajouter ✦</Btn>
+        <Btn variant="gold" onClick={()=>{
+          if(!f.title||!f.location) return;
+          const base = { title:f.title, url:f.url||"#", platform:f.platform, location:f.location, price:parseFloat(f.price)||0, nights:parseInt(f.nights)||1, rating:Math.min(5,parseFloat(f.rating)||4), image:f.image||"https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&q=80", pros:f.pros.split(",").map(s=>s.trim()).filter(Boolean), cons:f.cons.split(",").map(s=>s.trim()).filter(Boolean) };
+          if(isEdit) { onEdit({...initialProperty, ...base}); }
+          else { onAdd({...base, id:"p"+Date.now(), lat:43+Math.random()*5, lng:2+Math.random()*8, addedBy:currentUserId, votes:[currentUserId], notes:[]}); }
+          onClose();
+        }} style={{ flex:2 }}>{isEdit ? "Enregistrer ✦" : "Ajouter ✦"}</Btn>
       </div>
     </Modal>
   );
@@ -638,7 +652,7 @@ function StarRatingBar({ property:p, currentUserId, people, onRate }) {
 
 // ─── Property Card ────────────────────────────────────────────────────────────
 
-function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, onDelete, isWinner }) {
+function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, onDelete, onEdit, isWinner }) {
   const [noteText,setNoteText]=useState(""); const [showNote,setShowNote]=useState(false);
   const [confirmDelete,setConfirmDelete]=useState(false);
   const person=id=>people.find(u=>u.id===id);
@@ -650,7 +664,7 @@ function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, on
         <img src={p.image} alt={p.title} style={{ width:"100%",height:"100%",objectFit:"cover",display:"block" }} />
         <div style={{ position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 50%,#0d0d1e 100%)" }} />
         <div style={{ position:"absolute",top:10,left:10 }}><PBadge platform={p.platform} /></div>
-        {/* Delete button */}
+        {/* Edit + Delete buttons */}
         <div style={{ position:"absolute",top:8,right:8,display:"flex",gap:4,alignItems:"center" }}>
           {confirmDelete?(
             <>
@@ -659,8 +673,12 @@ function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, on
               <button onClick={()=>setConfirmDelete(false)} style={{ background:"#1e1e30",border:"none",borderRadius:6,color:"#aaa",fontSize:11,padding:"3px 8px",cursor:"pointer" }}>Non</button>
             </>
           ):(
-            <button onClick={()=>setConfirmDelete(true)} title="Retirer ce logement"
-              style={{ background:"#0d0d1eaa",border:"1px solid #2a2a3e",borderRadius:6,color:"#555",fontSize:13,width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",lineHeight:1 }}>🗑</button>
+            <>
+              <button onClick={()=>onEdit(p)} title="Modifier ce logement"
+                style={{ background:"#0d0d1eaa",border:"1px solid #2a2a3e",borderRadius:6,color:"#555",fontSize:13,width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",lineHeight:1 }}>✏️</button>
+              <button onClick={()=>setConfirmDelete(true)} title="Retirer ce logement"
+                style={{ background:"#0d0d1eaa",border:"1px solid #2a2a3e",borderRadius:6,color:"#555",fontSize:13,width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",lineHeight:1 }}>🗑</button>
+            </>
           )}
         </div>
         {isWinner&&<div style={{ position:"absolute",bottom:10,right:10,background:"#c9a96e",color:"#0a0a14",borderRadius:20,padding:"3px 10px",fontSize:13,fontWeight:800,fontFamily:"'Cormorant Garamond',serif" }}>€{p.price*p.nights}</div>}
@@ -751,10 +769,12 @@ function MapView({ properties, people, currentUserId, onVote, onAddNote, selecte
 function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
   const [view,setView]=useState("list"); const [filter,setFilter]=useState("all"); const [sort,setSort]=useState("votes");
   const [selectedId,setSelectedId]=useState(null); const [showAdd,setShowAdd]=useState(false);
+  const [editProperty,setEditProperty]=useState(null);
 
   const handleVote=pid=>onUpdateTrip({...trip,properties:trip.properties.map(p=>p.id!==pid?p:{...p,votes:p.votes.includes(currentUserId)?p.votes.filter(v=>v!==currentUserId):[...p.votes,currentUserId]})});
   const handleNote=(pid,text)=>onUpdateTrip({...trip,properties:trip.properties.map(p=>p.id!==pid?p:{...p,notes:[...p.notes,{authorId:currentUserId,text}]})});
   const handleDelete=pid=>onUpdateTrip({...trip,properties:trip.properties.filter(p=>p.id!==pid)});
+  const handleEdit=updated=>onUpdateTrip({...trip,properties:trip.properties.map(p=>p.id===updated.id?updated:p)});
 
   const filtered=trip.properties.filter(p=>filter==="all"||p.platform===filter).sort((a,b)=>sort==="votes"?b.votes.length-a.votes.length:sort==="rating"?b.rating-a.rating:(a.price*a.nights)-(b.price*b.nights));
   const top=[...trip.properties].sort((a,b)=>b.votes.length-a.votes.length)[0];
@@ -797,7 +817,7 @@ function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
             </div>
           ):(
             <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:12 }}>
-              {filtered.map(p=><PropertyCard key={p.id} property={p} people={people} currentUserId={currentUserId} onVote={handleVote} onAddNote={handleNote} onDelete={handleDelete} isWinner={top&&top.id===p.id&&top.votes.length>0} />)}
+              {filtered.map(p=><PropertyCard key={p.id} property={p} people={people} currentUserId={currentUserId} onVote={handleVote} onAddNote={handleNote} onDelete={handleDelete} onEdit={setEditProperty} isWinner={top&&top.id===p.id&&top.votes.length>0} />)}
               <div onClick={()=>setShowAdd(true)} style={{ border:"1px dashed #1a1a28",borderRadius:16,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:40,cursor:"pointer",minHeight:160,background:"#0a0a14",color:"#2a2a3e" }} onMouseEnter={e=>{e.currentTarget.style.borderColor="#c9a96e44";e.currentTarget.style.color="#c9a96e55";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#1a1a28";e.currentTarget.style.color="#2a2a3e";}}>
                 <span style={{ fontSize:26,marginBottom:6 }}>✦</span>
                 <span style={{ fontSize:12,fontFamily:"'Cormorant Garamond',serif" }}>Ajouter un logement</span>
@@ -809,6 +829,7 @@ function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
         <div style={{ flex:1 }}><MapView properties={filtered} people={people} currentUserId={currentUserId} onVote={handleVote} onAddNote={handleNote} selectedId={selectedId} onSelect={setSelectedId} /></div>
       )}
       {showAdd&&<AddPropertyModal onClose={()=>setShowAdd(false)} onAdd={p=>{onUpdateTrip({...trip,properties:[...trip.properties,p]});setShowAdd(false);}} currentUserId={currentUserId} />}
+      {editProperty&&<AddPropertyModal onClose={()=>setEditProperty(null)} onEdit={p=>{handleEdit(p);setEditProperty(null);}} initialProperty={editProperty} currentUserId={currentUserId} />}
     </div>
   );
 }
@@ -903,7 +924,7 @@ export default function App() {
           </button>
           <div style={{ display:"flex",alignItems:"center",gap:4,background:"#0e0e1e",borderRadius:20,padding:"4px 12px 4px 6px" }}>
             <span style={{ fontSize:10,color:"#555" }}>Je suis :</span>
-            {safePeople.map(p=><button key={p.id} onClick={()=>setCurrentUserId(p.id)} title={p.name} style={{ background:"none",border:`2px solid ${currentUserId===p.id?p.color:"transparent"}`,borderRadius:"50%",padding:0,cursor:"pointer",lineHeight:0 }}><Avatar name={p.name} color={p.color} size={24} /></button>)}
+            {safePeople.filter(p=>!trip||trip.members.some(m=>m.personId===p.id)).map(p=><button key={p.id} onClick={()=>setCurrentUserId(p.id)} title={p.name} style={{ background:"none",border:`2px solid ${currentUserId===p.id?p.color:"transparent"}`,borderRadius:"50%",padding:0,cursor:"pointer",lineHeight:0 }}><Avatar name={p.name} color={p.color} size={24} /></button>)}
             {currentPerson&&<span style={{ fontSize:12,color:currentPerson.color,fontWeight:600,marginLeft:4 }}>{currentPerson.name}</span>}
           </div>
         </div>
@@ -914,7 +935,7 @@ export default function App() {
         {/* Sidebar */}
         <div style={{ width:216,background:"#08080f",borderRight:"1px solid #10101e",display:"flex",flexDirection:"column",flexShrink:0,overflowY:"auto" }}>
           <div style={{ padding:"12px 14px 6px",fontSize:9,color:"#2a2a3e",textTransform:"uppercase",letterSpacing:2,fontWeight:700 }}>Mes séjours</div>
-          {safeTrips.map(t=>{
+          {safeTrips.filter(t=>t.members.some(m=>m.personId===currentUserId)).map(t=>{
             const isA=t.id===activeTrip, pe=pendingCount(t);
             return (
               <div key={t.id} onClick={()=>setActiveTrip(t.id)} style={{ margin:"0 6px 3px",padding:"9px 10px",borderRadius:11,cursor:"pointer",background:isA?"#141428":"transparent",border:`1px solid ${isA?"#c9a96e33":"transparent"}`,position:"relative" }} onMouseEnter={e=>{ if(!isA)e.currentTarget.style.background="#0e0e1e"; }} onMouseLeave={e=>{ if(!isA)e.currentTarget.style.background="transparent"; }}>

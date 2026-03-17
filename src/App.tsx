@@ -585,7 +585,7 @@ function AddPropertyModal({ onClose, onAdd, onEdit, initialProperty, currentUser
           if(!f.title||!f.location) return;
           const base = { title:f.title, url:f.url||"#", platform:f.platform, location:f.location, price:parseFloat(f.price)||0, nights:parseInt(f.nights)||1, rating:Math.min(5,parseFloat(f.rating)||4), image:f.image||"https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&q=80", pros:f.pros.split(",").map(s=>s.trim()).filter(Boolean), cons:f.cons.split(",").map(s=>s.trim()).filter(Boolean) };
           if(isEdit) { onEdit({...initialProperty, ...base}); }
-          else { onAdd({...base, id:"p"+Date.now(), lat:43+Math.random()*5, lng:2+Math.random()*8, addedBy:currentUserId, votes:[currentUserId], notes:[]}); }
+          else { onAdd({...base, id:"p"+Date.now(), lat:43+Math.random()*5, lng:2+Math.random()*8, addedBy:currentUserId, votes:[currentUserId], notes:[], ratings:{}}); }
           onClose();
         }} style={{ flex:2 }}>{isEdit ? "Enregistrer ✦" : "Ajouter ✦"}</Btn>
       </div>
@@ -775,6 +775,7 @@ function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
   const handleNote=(pid,text)=>onUpdateTrip({...trip,properties:trip.properties.map(p=>p.id!==pid?p:{...p,notes:[...p.notes,{authorId:currentUserId,text}]})});
   const handleDelete=pid=>onUpdateTrip({...trip,properties:trip.properties.filter(p=>p.id!==pid)});
   const handleEdit=updated=>onUpdateTrip({...trip,properties:trip.properties.map(p=>p.id===updated.id?updated:p)});
+  const handleRate=(pid,val)=>onUpdateTrip({...trip,properties:trip.properties.map(p=>p.id!==pid?p:{...p,ratings:{...(p.ratings||{}), [currentUserId]:val}})});
 
   const filtered=trip.properties.filter(p=>filter==="all"||p.platform===filter).sort((a,b)=>sort==="votes"?b.votes.length-a.votes.length:sort==="rating"?b.rating-a.rating:(a.price*a.nights)-(b.price*b.nights));
   const top=[...trip.properties].sort((a,b)=>b.votes.length-a.votes.length)[0];
@@ -817,7 +818,7 @@ function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
             </div>
           ):(
             <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:12 }}>
-              {filtered.map(p=><PropertyCard key={p.id} property={p} people={people} currentUserId={currentUserId} onVote={handleVote} onAddNote={handleNote} onDelete={handleDelete} onEdit={setEditProperty} isWinner={top&&top.id===p.id&&top.votes.length>0} />)}
+              {filtered.map(p=><PropertyCard key={p.id} property={p} people={people} currentUserId={currentUserId} onVote={handleVote} onRate={handleRate} onAddNote={handleNote} onDelete={handleDelete} onEdit={setEditProperty} isWinner={top&&top.id===p.id&&top.votes.length>0} />)}
               <div onClick={()=>setShowAdd(true)} style={{ border:"1px dashed #D5CFCA",borderRadius:16,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:40,cursor:"pointer",minHeight:160,background:"#F4F1EC",color:"#C5BFAA" }} onMouseEnter={e=>{e.currentTarget.style.borderColor="#c9a96e44";e.currentTarget.style.color="#c9a96e55";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#1a1a28";e.currentTarget.style.color="#2a2a3e";}}>
                 <span style={{ fontSize:26,marginBottom:6 }}>✦</span>
                 <span style={{ fontSize:12,fontFamily:"'Cormorant Garamond',serif" }}>Ajouter un logement</span>

@@ -858,21 +858,16 @@ export default function App() {
   useEffect(()=>{ if(loaded) localStorage.setItem("sejours:activeTrip",  activeTrip);    },[activeTrip,loaded]);
   useEffect(()=>{ if(loaded) localStorage.setItem("sejours:currentUser", currentUserId); },[currentUserId,loaded]);
 
-  // Flag pour distinguer changement local vs snapshot Firestore
-  const fromFirestore = useRef(false);
-
-  // Sync temps réel avec Firestore
+  // Sync temps réel avec Firestore (lecture seule — les sauvegardes se font via save())
   useEffect(()=>{
     const ref = doc(db, "appdata", "main");
     const unsub = onSnapshot(ref, (snap) => {
       if(snap.exists()) {
         const data = snap.data();
-        fromFirestore.current = true;
         setTrips(data.trips   ?? INITIAL_TRIPS);
         setPeople(data.people ?? INITIAL_PEOPLE);
       } else {
         setDoc(ref, { trips: INITIAL_TRIPS, people: INITIAL_PEOPLE });
-        fromFirestore.current = true;
         setTrips(INITIAL_TRIPS);
         setPeople(INITIAL_PEOPLE);
       }
@@ -887,20 +882,30 @@ export default function App() {
     return () => unsub();
   },[]);
 
-  // Sauvegarde dans Firestore uniquement si le changement vient de l'utilisateur
-  useEffect(()=>{
-    if(!loaded || trips===null || people===null) return;
-    if(fromFirestore.current) { fromFirestore.current = false; return; }
-    setDoc(doc(db, "appdata", "main"), { trips, people });
-  },[trips, people, loaded]);
-
   const safeTrips  = trips  || [];
   const safePeople = people || [];
   const trip       = safeTrips.find(t=>t.id===activeTrip);
   const person     = id => safePeople.find(p=>p.id===id);
   const currentPerson = person(currentUserId);
-  const updateTrip = u => setTrips(prev=>prev.map(t=>t.id===u.id?u:t));
-  const deleteTrip = id => { setTrips(prev=>prev.filter(t=>t.id!==id)); if(activeTrip===id){ const r=safeTrips.find(t=>t.id!==id); setActiveTrip(r?.id||null); } };
+
+  const save = (newTrips, newPeople) => {
+    setDoc(doc(db, "appdata", "main"), { trips: newTrips, people: newPeople });
+  };
+  const updateTrip = u => {
+    const newTrips = safeTrips.map(t=>t.id===u.id?u:t);
+    setTrips(newTrips);
+    save(newTrips, safePeople);
+  };
+  const updatePeople = newPeople => {
+    setPeople(newPeople);
+    save(safeTrips, newPeople);
+  };
+  const deleteTrip = id => {
+    const newTrips = safeTrips.filter(t=>t.id!==id);
+    setTrips(newTrips);
+    save(newTrips, safePeople);
+    if(activeTrip===id){ const r=newTrips[0]; setActiveTrip(r?.id||null); }
+  };
   const acceptedCount = t => t.members.filter(m=>m.status==="accepted").length;
   const pendingCount  = t => t.members.filter(m=>m.status==="pending").length;
 
@@ -992,8 +997,8 @@ export default function App() {
         </div>
       </div>
 
-      {showNewTrip&&<NewTripModal people={safePeople} onClose={()=>setShowNewTrip(false)} onCreate={t=>{setTrips(p=>[...p,t]);setActiveTrip(t.id);setShowNewTrip(false);}} />}
-      {showPeople&&<PeopleModal people={safePeople} trips={safeTrips} onClose={()=>setShowPeople(false)} onSavePeople={setPeople} onSaveTrips={setTrips} currentUserPerson={currentPerson} />}
+      {showNewTrip&&<NewTripModal people={safePeople} onClose={()=>setShowNewTrip(false)} onCreate={t=>{ const newTrips=[...safeTrips,t]; setTrips(newTrips); save(newTrips,safePeople); setActiveTrip(t.id); setShowNewTrip(false); }} />}
+      {showPeople&&<PeopleModal people={safePeople} trips={safeTrips} onClose={()=>setShowPeople(false)} onSavePeople={newP=>{ setPeople(newP); save(safeTrips,newP); }} onSaveTrips={newT=>{ setTrips(newT); save(newT,safePeople); }} currentUserPerson={currentPerson} />}
     </div>
   );
 }

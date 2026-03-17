@@ -87,18 +87,18 @@ function PBadge({ platform }) {
 }
 
 function Input({ value, onChange, placeholder, type="text", style:ext, autoFocus, onKeyDown }) {
-  return <input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} autoFocus={autoFocus} onKeyDown={onKeyDown} style={{ background:"#0e0e1e",border:"1px solid #1e1e30",borderRadius:8,padding:"8px 12px",color:"#f0e6d3",fontSize:13,fontFamily:"inherit",outline:"none",width:"100%",boxSizing:"border-box",...ext }} />;
+  return <input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} autoFocus={autoFocus} onKeyDown={onKeyDown} style={{ background:"#F5F2EE",border:"1px solid #E8E2D8",borderRadius:8,padding:"8px 12px",color:"#2C2517",fontSize:13,fontFamily:"inherit",outline:"none",width:"100%",boxSizing:"border-box",...ext }} />;
 }
 
 function Btn({ children, variant="ghost", onClick, style:ext, disabled }) {
-  const vars={ gold:{background:"#c9a96e",color:"#0a0a14",border:"none"}, ghost:{background:"transparent",color:"#777",border:"1px solid #252535"}, danger:{background:"#2a0808",color:"#f87171",border:"1px solid #3d1010"}, teal:{background:"#0d2a2a",color:"#4ECDC4",border:"1px solid #1a4040"} };
+  const vars={ gold:{background:"#c9a96e",color:"#0a0a14",border:"none"}, ghost:{background:"transparent",color:"#777",border:"1px solid #D5CFCA"}, danger:{background:"#2a0808",color:"#f87171",border:"1px solid #3d1010"}, teal:{background:"#0d2a2a",color:"#4ECDC4",border:"1px solid #1a4040"} };
   return <button disabled={disabled} onClick={onClick} style={{ border:"none",borderRadius:10,cursor:disabled?"default":"pointer",fontFamily:"inherit",fontWeight:600,fontSize:12,transition:"all .15s",padding:"7px 14px",display:"inline-flex",alignItems:"center",gap:5,opacity:disabled?.4:1,...vars[variant],...ext }}>{children}</button>;
 }
 
 function Modal({ onClose, title, children, width=500 }) {
   return (
     <div style={{ position:"fixed",inset:0,background:"#000c",backdropFilter:"blur(5px)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2000,padding:16 }} onClick={onClose}>
-      <div style={{ background:"#0d0d1e",border:"1px solid #1e1e30",borderRadius:20,padding:28,width:"100%",maxWidth:width,maxHeight:"92vh",overflowY:"auto",boxShadow:"0 24px 80px #000" }} onClick={e=>e.stopPropagation()}>
+      <div style={{ background:"#FFFFFF",border:"1px solid #E8E2D8",borderRadius:20,padding:28,width:"100%",maxWidth:width,maxHeight:"92vh",overflowY:"auto",boxShadow:"0 24px 80px #000" }} onClick={e=>e.stopPropagation()}>
         {title&&<h2 style={{ margin:"0 0 22px",fontFamily:"'Cormorant Garamond',serif",color:"#c9a96e",fontSize:22,fontWeight:700 }}>{title}</h2>}
         {children}
       </div>
@@ -111,7 +111,7 @@ function Label({ children }) {
 }
 
 function StatusPill({ status }) {
-  const cfg={ accepted:{bg:"#0d2818",color:"#4ade80",label:"Accepté ✓"}, pending:{bg:"#1a160a",color:"#fbbf24",label:"En attente…"}, declined:{bg:"#2a0a0a",color:"#f87171",label:"Décliné ✗"} }[status]||{bg:"#1a1a2e",color:"#888",label:"Inconnu"};
+  const cfg={ accepted:{bg:"#0d2818",color:"#16A34A",label:"Accepté ✓"}, pending:{bg:"#1a160a",color:"#fbbf24",label:"En attente…"}, declined:{bg:"#2a0a0a",color:"#f87171",label:"Décliné ✗"} }[status]||{bg:"#1a1a2e",color:"#888",label:"Inconnu"};
   return <span style={{ background:cfg.bg,color:cfg.color,borderRadius:20,padding:"2px 9px",fontSize:10,fontWeight:700 }}>{cfg.label}</span>;
 }
 
@@ -154,10 +154,10 @@ function CalendarPicker({ onSelect, initialStart, initialEnd }) {
   useEffect(()=>{ onSelect(start,end); },[start,end]);
 
   return (
-    <div style={{ background:"#0a0a18",border:"1px solid #1e1e30",borderRadius:14,padding:14,userSelect:"none",width:260 }}>
+    <div style={{ background:"#FFFFFF",border:"1px solid #E8E2D8",borderRadius:14,padding:14,userSelect:"none",width:260 }}>
       <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10 }}>
         <button onClick={prevMonth} style={{ background:"none",border:"none",color:"#888",cursor:"pointer",fontSize:16,padding:"0 6px" }}>‹</button>
-        <span style={{ fontSize:13,fontWeight:700,color:"#f0e6d3",fontFamily:"'Cormorant Garamond',serif" }}>{MONTHS_FR[view.month]} {view.year}</span>
+        <span style={{ fontSize:13,fontWeight:700,color:"#2C2517",fontFamily:"'Cormorant Garamond',serif" }}>{MONTHS_FR[view.month]} {view.year}</span>
         <button onClick={nextMonth} style={{ background:"none",border:"none",color:"#888",cursor:"pointer",fontSize:16,padding:"0 6px" }}>›</button>
       </div>
       <div style={{ display:"grid",gridTemplateColumns:"repeat(7,1fr)",marginBottom:4 }}>
@@ -202,13 +202,13 @@ function TripHeaderEdit({ trip, onUpdate }) {
 
   if(!editing) return (
     <div onClick={open} title="Cliquer pour modifier" style={{ cursor:"pointer" }}>
-      <div style={{ fontSize:18,fontFamily:"'Cormorant Garamond',serif",fontWeight:700,color:"#f0e6d3",lineHeight:1.1,display:"flex",alignItems:"center",gap:6 }}>{trip.name}<span style={{ fontSize:11,color:"#333",fontWeight:400 }}>✎</span></div>
-      {trip.dates?<div style={{ fontSize:11,color:"#555" }}>{trip.dates}</div>:<div style={{ fontSize:11,color:"#2a2a3e" }}>+ Ajouter des dates</div>}
+      <div style={{ fontSize:18,fontFamily:"'Cormorant Garamond',serif",fontWeight:700,color:"#2C2517",lineHeight:1.1,display:"flex",alignItems:"center",gap:6 }}>{trip.name}<span style={{ fontSize:11,color:"#333",fontWeight:400 }}>✎</span></div>
+      {trip.dates?<div style={{ fontSize:11,color:"#555" }}>{trip.dates}</div>:<div style={{ fontSize:11,color:"#C5BFAA" }}>+ Ajouter des dates</div>}
     </div>
   );
 
   return (
-    <div style={{ display:"flex",flexDirection:"column",gap:8,background:"#0e0e1e",border:"1px solid #c9a96e44",borderRadius:14,padding:"12px 14px",zIndex:10 }} onClick={e=>e.stopPropagation()}>
+    <div style={{ display:"flex",flexDirection:"column",gap:8,background:"#F5F2EE",border:"1px solid #c9a96e44",borderRadius:14,padding:"12px 14px",zIndex:10 }} onClick={e=>e.stopPropagation()}>
       <div style={{ display:"flex",gap:4,flexWrap:"wrap" }}>
         {TRIP_EMOJIS.map(e=><button key={e} onClick={()=>setEmoji(e)} style={{ width:28,height:28,borderRadius:8,fontSize:14,cursor:"pointer",background:emoji===e?"#c9a96e33":"#0a0a18",border:`1px solid ${emoji===e?"#c9a96e":"#1e1e30"}`,padding:0 }}>{e}</button>)}
       </div>
@@ -299,7 +299,7 @@ function PeopleModal({ people, trips, onClose, onSavePeople, onSaveTrips, curren
 
   return (
     <Modal onClose={onClose} title="👥 Gestion des participants" width={600}>
-      <div style={{ display:"flex",gap:4,marginBottom:22,background:"#0a0a18",borderRadius:12,padding:4 }}>
+      <div style={{ display:"flex",gap:4,marginBottom:22,background:"#FFFFFF",borderRadius:12,padding:4 }}>
         {[["people","👤 Carnet d'amis"],["assign","🗓️ Affectation aux séjours"]].map(([k,l])=>(
           <button key={k} onClick={()=>setTab(k)} style={{ flex:1,background:tab===k?"#c9a96e":"transparent",border:"none",borderRadius:9,padding:"8px 12px",cursor:"pointer",fontFamily:"inherit",fontSize:12,fontWeight:700,color:tab===k?"#0a0a14":"#666" }}>{l}</button>
         ))}
@@ -309,11 +309,11 @@ function PeopleModal({ people, trips, onClose, onSavePeople, onSaveTrips, curren
         <>
           <div style={{ display:"flex",flexDirection:"column",gap:6,marginBottom:20 }}>
             {pList.map((p,i)=>(
-              <div key={p.id} style={{ background:"#0e0e1e",borderRadius:12,padding:"10px 14px",border:"1px solid #1a1a2e" }}>
+              <div key={p.id} style={{ background:"#F5F2EE",borderRadius:12,padding:"10px 14px",border:"1px solid #E0D9CE" }}>
                 <div style={{ display:"flex",alignItems:"center",gap:10 }}>
                   <Avatar name={p.name} color={p.color} size={34} />
                   <div style={{ flex:1,minWidth:0 }}>
-                    <div style={{ fontSize:13,fontWeight:700,color:"#f0e6d3",fontFamily:"'Cormorant Garamond',serif" }}>{p.name}</div>
+                    <div style={{ fontSize:13,fontWeight:700,color:"#2C2517",fontFamily:"'Cormorant Garamond',serif" }}>{p.name}</div>
                     {p.email?<div style={{ fontSize:11,color:"#555" }}>✉ {p.email}</div>:<div style={{ fontSize:11,color:"#f87171" }}>⚠ Pas d'e-mail</div>}
                   </div>
                   <div style={{ display:"flex",gap:3,flexWrap:"wrap",maxWidth:96 }}>
@@ -325,7 +325,7 @@ function PeopleModal({ people, trips, onClose, onSavePeople, onSaveTrips, curren
             ))}
           </div>
           <Label>Ajouter un ami</Label>
-          <div style={{ display:"flex",flexDirection:"column",gap:8,background:"#0a0a18",borderRadius:12,padding:14,border:"1px dashed #1e1e30" }}>
+          <div style={{ display:"flex",flexDirection:"column",gap:8,background:"#FFFFFF",borderRadius:12,padding:14,border:"1px dashed #1e1e30" }}>
             <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:8 }}>
               <div><Label>Prénom *</Label><Input value={newName} onChange={setNewName} placeholder="Camille…" onKeyDown={e=>e.key==="Enter"&&addPerson()} /></div>
               <div><Label>E-mail</Label><Input value={newEmail} onChange={setNewEmail} placeholder="camille@mail.com" type="email" onKeyDown={e=>e.key==="Enter"&&addPerson()} /></div>
@@ -338,8 +338,8 @@ function PeopleModal({ people, trips, onClose, onSavePeople, onSaveTrips, curren
       {tab==="assign"&&(
         <div style={{ display:"flex",flexDirection:"column",gap:20 }}>
           {tList.map(t=>(
-            <div key={t.id} style={{ background:"#0a0a18",borderRadius:14,padding:14,border:"1px solid #1a1a2e" }}>
-              <div style={{ fontSize:15,fontFamily:"'Cormorant Garamond',serif",color:"#f0e6d3",fontWeight:700,marginBottom:12,display:"flex",alignItems:"center",gap:8 }}>
+            <div key={t.id} style={{ background:"#FFFFFF",borderRadius:14,padding:14,border:"1px solid #E0D9CE" }}>
+              <div style={{ fontSize:15,fontFamily:"'Cormorant Garamond',serif",color:"#2C2517",fontWeight:700,marginBottom:12,display:"flex",alignItems:"center",gap:8 }}>
                 <span>{t.emoji}</span>{t.name}{t.dates&&<span style={{ fontSize:11,color:"#555",fontWeight:400 }}>· {t.dates}</span>}
               </div>
               <div style={{ display:"flex",flexDirection:"column",gap:6 }}>
@@ -351,10 +351,10 @@ function PeopleModal({ people, trips, onClose, onSavePeople, onSaveTrips, curren
                       <Avatar name={p.name} color={p.color} size={28} />
                       <div style={{ flex:1,minWidth:0 }}><div style={{ fontSize:13,fontWeight:600,color:member?"#f0e6d3":"#666" }}>{p.name}</div>{p.email&&<div style={{ fontSize:10,color:"#444" }}>{p.email}</div>}</div>
                       {member&&<StatusPill status={status} />}
-                      {member&&<select value={status} onChange={e=>updateStatus(t.id,p.id,e.target.value)} style={{ background:"#0e0e1e",border:"1px solid #252535",color:"#888",borderRadius:7,padding:"4px 6px",fontSize:11,fontFamily:"inherit",cursor:"pointer",outline:"none" }}><option value="pending">En attente</option><option value="accepted">Accepté</option><option value="declined">Décliné</option></select>}
+                      {member&&<select value={status} onChange={e=>updateStatus(t.id,p.id,e.target.value)} style={{ background:"#F5F2EE",border:"1px solid #D5CFCA",color:"#888",borderRadius:7,padding:"4px 6px",fontSize:11,fontFamily:"inherit",cursor:"pointer",outline:"none" }}><option value="pending">En attente</option><option value="accepted">Accepté</option><option value="declined">Décliné</option></select>}
                       {member&&p.email&&(()=>{
                         const st=inviteState[sentKey];
-                        if(st==="sent")    return <span style={{ fontSize:11,color:"#4ade80",fontWeight:600 }}>✓ Envoyé</span>;
+                        if(st==="sent")    return <span style={{ fontSize:11,color:"#16A34A",fontWeight:600 }}>✓ Envoyé</span>;
                         if(st==="sending") return <span style={{ fontSize:11,color:"#c9a96e" }}>⏳ Envoi…</span>;
                         if(st==="error")   return <span onClick={()=>handleInvite(p,t,currentUserPerson?.name||"L'organisateur")} style={{ fontSize:11,color:"#f87171",cursor:"pointer",fontWeight:600 }} title="Réessayer">✗ Erreur – réessayer</span>;
                         return <Btn variant="teal" style={{ fontSize:11,padding:"5px 10px" }} onClick={()=>handleInvite(p,t,currentUserPerson?.name||"L'organisateur")}>✉ Inviter</Btn>;
@@ -539,7 +539,7 @@ function AddPropertyModal({ onClose, onAdd, onEdit, initialProperty, currentUser
   return (
     <Modal onClose={onClose} title={isEdit ? "✦ Modifier le logement" : "✦ Ajouter un logement"} width={500}>
       {/* ── URL + bouton fetch ── */}
-      <div style={{ background:"#0a0a18",border:"1px solid #1e1e30",borderRadius:10,padding:"12px 14px",marginBottom:14 }}>
+      <div style={{ background:"#FFFFFF",border:"1px solid #E8E2D8",borderRadius:10,padding:"12px 14px",marginBottom:14 }}>
         <Label>Lien du logement (Airbnb, Booking, Abritel, Vrbo…)</Label>
         <div style={{ display:"flex",gap:8,marginTop:4 }}>
           <Input value={f.url} onChange={v=>{ s("url",v); s("platform",detectPlatform(v)); }} placeholder="https://airbnb.com/rooms/…" style={{ flex:1 }} />
@@ -556,13 +556,13 @@ function AddPropertyModal({ onClose, onAdd, onEdit, initialProperty, currentUser
         {[{k:"title",l:"Nom *",ph:"Villa Les Roses…"},{k:"location",l:"Localisation *",ph:"Côte d'Azur, France"}].map(x=><div key={x.k}><Label>{x.l}</Label><Input value={f[x.k]} onChange={v=>s(x.k,v)} placeholder={x.ph} /></div>)}
         <div><Label>URL image</Label><div style={{ display:"flex",gap:8,alignItems:"flex-start" }}>
           <Input value={f.image} onChange={v=>s("image",v)} placeholder="https://…" style={{ flex:1 }} />
-          {f.image&&<img src={f.image} alt="" style={{ width:52,height:40,objectFit:"cover",borderRadius:6,border:"1px solid #1e1e30",flexShrink:0 }} onError={e=>e.currentTarget.style.display="none"} />}
+          {f.image&&<img src={f.image} alt="" style={{ width:52,height:40,objectFit:"cover",borderRadius:6,border:"1px solid #E8E2D8",flexShrink:0 }} onError={e=>e.currentTarget.style.display="none"} />}
         </div></div>
         <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10 }}>
           <div>
             <div style={{ display:"flex",alignItems:"center",gap:6,marginBottom:4 }}>
               <Label style={{ marginBottom:0 }}>Prix</Label>
-              <button onClick={togglePriceMode} style={{ background:"#1e1e30",border:"1px solid #2a2a40",borderRadius:20,padding:"2px 8px",fontSize:10,cursor:"pointer",color:"#c9a96e",fontWeight:700,lineHeight:1.5 }}>
+              <button onClick={togglePriceMode} style={{ background:"#EAE4D8",border:"1px solid #2a2a40",borderRadius:20,padding:"2px 8px",fontSize:10,cursor:"pointer",color:"#c9a96e",fontWeight:700,lineHeight:1.5 }}>
                 {priceMode==="nuit"?"€/nuit":"€ total"}
               </button>
             </div>
@@ -607,7 +607,7 @@ function StarRatingBar({ property:p, currentUserId, people, onRate }) {
   const person = id => people.find(u=>u.id===id);
 
   return (
-    <div style={{ background:"#0a0a18",borderRadius:10,padding:"8px 10px",border:"1px solid #1a1a2e" }}>
+    <div style={{ background:"#FFFFFF",borderRadius:10,padding:"8px 10px",border:"1px solid #E0D9CE" }}>
       <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap" }}>
         {/* My stars */}
         <div style={{ display:"flex",alignItems:"center",gap:3 }}>
@@ -615,7 +615,7 @@ function StarRatingBar({ property:p, currentUserId, people, onRate }) {
           {[1,2,3,4,5].map(s=>(
             <span key={s} onMouseEnter={()=>setHover(s)} onMouseLeave={()=>setHover(0)}
               onClick={()=>onRate(p.id, myRating===s?0:s)}
-              style={{ fontSize:20,cursor:"pointer",color:(hover||myRating)>=s?"#F4C542":"#252535",transition:"color .1s",lineHeight:1 }}>★</span>
+              style={{ fontSize:20,cursor:"pointer",color:(hover||myRating)>=s?"#F4C542":"#D5CFC5",transition:"color .1s",lineHeight:1 }}>★</span>
           ))}
           {myRating>0&&<span style={{ fontSize:11,color:"#F4C542",fontWeight:700,marginLeft:2 }}>{myRating}/5</span>}
           {myRating===0&&<span style={{ fontSize:10,color:"#333",fontStyle:"italic" }}>non noté</span>}
@@ -636,7 +636,7 @@ function StarRatingBar({ property:p, currentUserId, people, onRate }) {
       {raters.length>0&&(
         <div style={{ display:"flex",gap:8,marginTop:8,flexWrap:"wrap" }}>
           {raters.map(([uid,val])=>{ const u=person(uid); if(!u) return null; return (
-            <div key={uid} style={{ display:"flex",alignItems:"center",gap:4,background:"#0e0e1e",borderRadius:20,padding:"3px 8px 3px 5px",border:"1px solid #1a1a2e" }}>
+            <div key={uid} style={{ display:"flex",alignItems:"center",gap:4,background:"#F5F2EE",borderRadius:20,padding:"3px 8px 3px 5px",border:"1px solid #E0D9CE" }}>
               <Avatar name={u.name} color={u.color} size={16} />
               <span style={{ fontSize:10,color:u.color,fontWeight:600 }}>{u.name}</span>
               <span style={{ fontSize:10,color:"#F4C542",letterSpacing:-1 }}>{"★".repeat(val)}{"☆".repeat(5-val)}</span>
@@ -658,26 +658,26 @@ function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, on
   const person=id=>people.find(u=>u.id===id);
   const avg=avgRating(p);
   return (
-    <div style={{ background:"#0d0d1e",border:`1px solid ${isWinner?"#c9a96e":"#181828"}`,borderRadius:16,overflow:"hidden",display:"flex",flexDirection:"column",boxShadow:isWinner?"0 0 0 1px #c9a96e44,0 8px 32px #c9a96e18":"none" }}>
+    <div style={{ background:"#FFFFFF",border:`1px solid ${isWinner?"#c9a96e":"#181828"}`,borderRadius:16,overflow:"hidden",display:"flex",flexDirection:"column",boxShadow:isWinner?"0 0 0 1px #c9a96e44,0 8px 32px #c9a96e18":"none" }}>
       {isWinner&&<div style={{ background:"linear-gradient(90deg,#c9a96e,#e8c98a)",padding:"4px 14px",fontSize:9,fontWeight:800,color:"#0a0a14",letterSpacing:2,textTransform:"uppercase" }}>✦ Favori du groupe</div>}
       <div style={{ position:"relative",height:145,overflow:"hidden",flexShrink:0 }}>
         <img src={p.image} alt={p.title} style={{ width:"100%",height:"100%",objectFit:"cover",display:"block" }} />
-        <div style={{ position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 50%,#0d0d1e 100%)" }} />
+        <div style={{ position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 40%,rgba(255,255,255,0.85) 100%)" }} />
         <div style={{ position:"absolute",top:10,left:10 }}><PBadge platform={p.platform} /></div>
         {/* Edit + Delete buttons */}
         <div style={{ position:"absolute",top:8,right:8,display:"flex",gap:4,alignItems:"center" }}>
           {confirmDelete?(
             <>
-              <span style={{ fontSize:11,color:"#fff",background:"#0d0d1ecc",borderRadius:8,padding:"2px 6px" }}>Retirer ?</span>
+              <span style={{ fontSize:11,color:"#fff",background:"#ffffffcc",borderRadius:8,padding:"2px 6px" }}>Retirer ?</span>
               <button onClick={()=>onDelete(p.id)} style={{ background:"#ef4444",border:"none",borderRadius:6,color:"#fff",fontSize:11,fontWeight:700,padding:"3px 8px",cursor:"pointer" }}>Oui</button>
-              <button onClick={()=>setConfirmDelete(false)} style={{ background:"#1e1e30",border:"none",borderRadius:6,color:"#aaa",fontSize:11,padding:"3px 8px",cursor:"pointer" }}>Non</button>
+              <button onClick={()=>setConfirmDelete(false)} style={{ background:"#EAE4D8",border:"none",borderRadius:6,color:"#aaa",fontSize:11,padding:"3px 8px",cursor:"pointer" }}>Non</button>
             </>
           ):(
             <>
               <button onClick={()=>onEdit(p)} title="Modifier ce logement"
-                style={{ background:"#0d0d1eaa",border:"1px solid #2a2a3e",borderRadius:6,color:"#555",fontSize:13,width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",lineHeight:1 }}>✏️</button>
+                style={{ background:"#ffffffaa",border:"1px solid #DDD7CC",borderRadius:6,color:"#555",fontSize:13,width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",lineHeight:1 }}>✏️</button>
               <button onClick={()=>setConfirmDelete(true)} title="Retirer ce logement"
-                style={{ background:"#0d0d1eaa",border:"1px solid #2a2a3e",borderRadius:6,color:"#555",fontSize:13,width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",lineHeight:1 }}>🗑</button>
+                style={{ background:"#ffffffaa",border:"1px solid #DDD7CC",borderRadius:6,color:"#555",fontSize:13,width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",lineHeight:1 }}>🗑</button>
             </>
           )}
         </div>
@@ -686,25 +686,25 @@ function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, on
       </div>
       <div style={{ padding:"12px 14px",flex:1,display:"flex",flexDirection:"column",gap:7 }}>
         <div>
-          <div style={{ fontSize:15,fontFamily:"'Cormorant Garamond',serif",color:"#f0e6d3",fontWeight:700,marginBottom:1 }}>{p.title}</div>
+          <div style={{ fontSize:15,fontFamily:"'Cormorant Garamond',serif",color:"#2C2517",fontWeight:700,marginBottom:1 }}>{p.title}</div>
           <div style={{ fontSize:11,color:"#666" }}>📍 {p.location}</div>
         </div>
         <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}><Stars rating={p.rating} /><span style={{ fontSize:10,color:"#555" }}>€{p.price}/nuit · {p.nights}n</span></div>
         <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:5 }}>
-          <div style={{ background:"#091a10",borderRadius:8,padding:"6px 8px" }}><div style={{ fontSize:9,color:"#4ade80",fontWeight:700,marginBottom:3,textTransform:"uppercase",letterSpacing:1 }}>Pour</div>{p.pros.map((x,i)=><div key={i} style={{ fontSize:10,color:"#86efac",lineHeight:1.4 }}>✓ {x}</div>)}</div>
-          <div style={{ background:"#1a0808",borderRadius:8,padding:"6px 8px" }}><div style={{ fontSize:9,color:"#f87171",fontWeight:700,marginBottom:3,textTransform:"uppercase",letterSpacing:1 }}>Contre</div>{p.cons.map((x,i)=><div key={i} style={{ fontSize:10,color:"#fca5a5",lineHeight:1.4 }}>✗ {x}</div>)}</div>
+          <div style={{ background:"#F0FFF4",borderRadius:8,padding:"6px 8px" }}><div style={{ fontSize:9,color:"#16A34A",fontWeight:700,marginBottom:3,textTransform:"uppercase",letterSpacing:1 }}>Pour</div>{p.pros.map((x,i)=><div key={i} style={{ fontSize:10,color:"#15803D",lineHeight:1.4 }}>✓ {x}</div>)}</div>
+          <div style={{ background:"#FFF5F5",borderRadius:8,padding:"6px 8px" }}><div style={{ fontSize:9,color:"#f87171",fontWeight:700,marginBottom:3,textTransform:"uppercase",letterSpacing:1 }}>Contre</div>{p.cons.map((x,i)=><div key={i} style={{ fontSize:10,color:"#DC2626",lineHeight:1.4 }}>✗ {x}</div>)}</div>
         </div>
         {/* Star rating */}
         <StarRatingBar property={p} currentUserId={currentUserId} people={people} onRate={onRate} />
 
         {/* Notes section */}
-        <div style={{ background:"#09091a",borderRadius:10,padding:"8px 10px",border:"1px solid #141428" }}>
+        <div style={{ background:"#F4F1EC",borderRadius:10,padding:"8px 10px",border:"1px solid #141428" }}>
           <div style={{ fontSize:9,color:"#333",textTransform:"uppercase",letterSpacing:1.2,fontWeight:700,marginBottom:p.notes.length?8:0 }}>💬 Commentaires</div>
-          {p.notes.length===0&&!showNote&&<div style={{ fontSize:11,color:"#2a2a3e",fontStyle:"italic",marginBottom:4 }}>Aucun commentaire pour l'instant</div>}
+          {p.notes.length===0&&!showNote&&<div style={{ fontSize:11,color:"#C5BFAA",fontStyle:"italic",marginBottom:4 }}>Aucun commentaire pour l'instant</div>}
           {p.notes.map((note,i)=>{ const u=person(note.authorId); return (
             <div key={i} style={{ display:"flex",gap:8,marginBottom:6,alignItems:"flex-start" }}>
               {u&&<Avatar name={u.name} color={u.color} size={20} style={{ flexShrink:0,marginTop:1 }} />}
-              <div style={{ background:"#0e0e22",borderRadius:8,padding:"5px 9px",flex:1,border:"1px solid #1a1a2e" }}>
+              <div style={{ background:"#F5F2EE",borderRadius:8,padding:"5px 9px",flex:1,border:"1px solid #E0D9CE" }}>
                 <span style={{ color:u?.color||"#c9a96e",fontWeight:700,fontSize:11 }}>{u?.name||"?"} </span>
                 <span style={{ fontSize:11,color:"#bbb" }}>{note.text}</span>
               </div>
@@ -716,7 +716,7 @@ function PropertyCard({ property:p, currentUserId, people, onRate, onAddNote, on
               <Btn variant="gold" onClick={()=>{if(noteText.trim()){onAddNote(p.id,noteText);setNoteText("");setShowNote(false);}}} style={{ padding:"7px 10px" }}>→</Btn>
             </div>
           ):(
-            <button onClick={()=>setShowNote(true)} style={{ background:"transparent",border:"1px dashed #1e1e2e",borderRadius:8,color:"#555",padding:"5px 10px",fontSize:11,cursor:"pointer",width:"100%",fontFamily:"inherit",marginTop:p.notes.length?4:0 }}>+ Ajouter un commentaire</button>
+            <button onClick={()=>setShowNote(true)} style={{ background:"transparent",border:"1px dashed #D5CFCA",borderRadius:8,color:"#555",padding:"5px 10px",fontSize:11,cursor:"pointer",width:"100%",fontFamily:"inherit",marginTop:p.notes.length?4:0 }}>+ Ajouter un commentaire</button>
           )}
         </div>
       </div>
@@ -748,12 +748,12 @@ function MapView({ properties, people, currentUserId, onVote, onAddNote, selecte
   return (
     <div style={{ display:"grid",gridTemplateColumns:"1fr 290px",height:"100%" }}>
       <div ref={ref} style={{ height:"100%" }} />
-      <div style={{ overflowY:"auto",background:"#080812",borderLeft:"1px solid #10101e",padding:8 }}>
+      <div style={{ overflowY:"auto",background:"#FAF8F5",borderLeft:"1px solid #10101e",padding:8 }}>
         {properties.map(p=>(
           <div key={p.id} onClick={()=>onSelect(p.id)} style={{ display:"flex",gap:8,padding:"8px 10px",borderRadius:10,cursor:"pointer",marginBottom:4,background:selectedId===p.id?"#141428":"transparent",border:`1px solid ${selectedId===p.id?"#c9a96e44":"transparent"}` }}>
             <img src={p.image} style={{ width:44,height:44,borderRadius:8,objectFit:"cover",flexShrink:0 }} />
             <div style={{ flex:1,minWidth:0 }}>
-              <div style={{ fontSize:12,fontWeight:700,color:"#f0e6d3",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",fontFamily:"'Cormorant Garamond',serif" }}>{p.title}</div>
+              <div style={{ fontSize:12,fontWeight:700,color:"#2C2517",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",fontFamily:"'Cormorant Garamond',serif" }}>{p.title}</div>
               <div style={{ fontSize:10,color:"#555",marginBottom:2 }}>{p.location}</div>
               <div style={{ display:"flex",justifyContent:"space-between" }}><Stars rating={p.rating} /><span style={{ fontSize:11,color:"#c9a96e",fontWeight:700 }}>€{p.price*p.nights}</span></div>
             </div>
@@ -782,7 +782,7 @@ function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
 
   return (
     <div style={{ flex:1,display:"flex",flexDirection:"column",minHeight:0 }}>
-      <div style={{ display:"flex",alignItems:"center",gap:6,padding:"8px 18px",background:"#0a0a18",borderBottom:"1px solid #10101e",flexWrap:"wrap" }}>
+      <div style={{ display:"flex",alignItems:"center",gap:6,padding:"8px 18px",background:"#FFFFFF",borderBottom:"1px solid #10101e",flexWrap:"wrap" }}>
         <div style={{ display:"flex",gap:4,flexWrap:"wrap" }}>
           <button onClick={()=>setFilter("all")} style={{ background:filter==="all"?"#1e1e30":"transparent",border:`1px solid ${filter==="all"?"#333":"#161626"}`,color:filter==="all"?"#f0e6d3":"#555",borderRadius:20,padding:"3px 10px",fontSize:11,cursor:"pointer",fontWeight:600 }}>Tous ({trip.properties.length})</button>
           {Object.entries(PLATFORMS).filter(([k])=>trip.properties.some(p=>p.platform===k)).map(([k,pl])=>(
@@ -792,14 +792,14 @@ function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
         <div style={{ marginLeft:"auto",display:"flex",gap:4,alignItems:"center" }}>
           <span style={{ fontSize:10,color:"#444" }}>Trier</span>
           {[["votes","Votes"],["rating","Note"],["price","Prix"]].map(([k,l])=><button key={k} onClick={()=>setSort(k)} style={{ background:sort===k?"#c9a96e22":"transparent",border:`1px solid ${sort===k?"#c9a96e44":"#161626"}`,color:sort===k?"#c9a96e":"#555",borderRadius:20,padding:"3px 10px",fontSize:11,cursor:"pointer" }}>{l}</button>)}
-          <div style={{ display:"flex",background:"#0e0e1e",borderRadius:8,padding:2,gap:1,marginLeft:6 }}>
+          <div style={{ display:"flex",background:"#F5F2EE",borderRadius:8,padding:2,gap:1,marginLeft:6 }}>
             {[["list","☰"],["map","◎"]].map(([v,ic])=><button key={v} onClick={()=>setView(v)} style={{ background:view===v?"#c9a96e":"transparent",border:"none",borderRadius:6,padding:"4px 10px",color:view===v?"#0a0a14":"#666",cursor:"pointer",fontSize:13 }}>{ic}</button>)}
           </div>
           <Btn variant="gold" onClick={()=>setShowAdd(true)} style={{ marginLeft:4,fontSize:12,padding:"7px 16px",boxShadow:"0 0 12px #c9a96e44" }}>+ Ajouter un logement</Btn>
         </div>
       </div>
       {trip.properties.length>0&&(
-        <div style={{ display:"flex",gap:14,padding:"6px 18px",background:"#080812",borderBottom:"1px solid #10101e",alignItems:"center",fontSize:11,color:"#555",flexWrap:"wrap" }}>
+        <div style={{ display:"flex",gap:14,padding:"6px 18px",background:"#FAF8F5",borderBottom:"1px solid #10101e",alignItems:"center",fontSize:11,color:"#555",flexWrap:"wrap" }}>
           <span>{trip.properties.length} logement{trip.properties.length>1?"s":""}</span>
           <span style={{ color:"#1a1a28" }}>·</span>
           <span>{totalVoters} vote{totalVoters!==1?"s":""} au total</span>
@@ -818,7 +818,7 @@ function TripPage({ trip, people, currentUserId, onUpdateTrip }) {
           ):(
             <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:12 }}>
               {filtered.map(p=><PropertyCard key={p.id} property={p} people={people} currentUserId={currentUserId} onVote={handleVote} onAddNote={handleNote} onDelete={handleDelete} onEdit={setEditProperty} isWinner={top&&top.id===p.id&&top.votes.length>0} />)}
-              <div onClick={()=>setShowAdd(true)} style={{ border:"1px dashed #1a1a28",borderRadius:16,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:40,cursor:"pointer",minHeight:160,background:"#0a0a14",color:"#2a2a3e" }} onMouseEnter={e=>{e.currentTarget.style.borderColor="#c9a96e44";e.currentTarget.style.color="#c9a96e55";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#1a1a28";e.currentTarget.style.color="#2a2a3e";}}>
+              <div onClick={()=>setShowAdd(true)} style={{ border:"1px dashed #D5CFCA",borderRadius:16,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:40,cursor:"pointer",minHeight:160,background:"#F4F1EC",color:"#C5BFAA" }} onMouseEnter={e=>{e.currentTarget.style.borderColor="#c9a96e44";e.currentTarget.style.color="#c9a96e55";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#1a1a28";e.currentTarget.style.color="#2a2a3e";}}>
                 <span style={{ fontSize:26,marginBottom:6 }}>✦</span>
                 <span style={{ fontSize:12,fontFamily:"'Cormorant Garamond',serif" }}>Ajouter un logement</span>
               </div>
@@ -900,29 +900,29 @@ export default function App() {
   const pendingCount  = t => t.members.filter(m=>m.status==="pending").length;
 
   return (
-    <div style={{ height:"100vh",display:"flex",flexDirection:"column",background:"#080812",fontFamily:"'Inter','Helvetica Neue',sans-serif",color:"#f0e6d3",overflow:"hidden" }}>
+    <div style={{ height:"100vh",display:"flex",flexDirection:"column",background:"#FAF8F5",fontFamily:"'Inter','Helvetica Neue',sans-serif",color:"#2C2517",overflow:"hidden" }}>
       <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
 
       {!loaded&&(
-        <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"#080812",color:"#c9a96e",fontFamily:"'Cormorant Garamond',serif",fontSize:18,gap:10,zIndex:9999 }}>
+        <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"#FAF8F5",color:"#c9a96e",fontFamily:"'Cormorant Garamond',serif",fontSize:18,gap:10,zIndex:9999 }}>
           <span style={{ animation:"spin 1s linear infinite",display:"inline-block" }}>✦</span> Chargement…
         </div>
       )}
 
       {/* Header */}
-      <div style={{ background:"#0a0a18",borderBottom:"1px solid #141428",display:"flex",alignItems:"center",gap:12,padding:"0 18px",height:52,flexShrink:0 }}>
+      <div style={{ background:"#FFFFFF",borderBottom:"1px solid #E8E2D8",display:"flex",alignItems:"center",gap:12,padding:"0 18px",height:52,flexShrink:0 }}>
         <span style={{ fontSize:18 }}>✦</span>
         <span style={{ fontSize:17,fontFamily:"'Cormorant Garamond',serif",fontWeight:700,color:"#c9a96e",letterSpacing:.5 }}>Séjours</span>
         <span style={{ fontSize:11,color:"#1e1e30" }}>·</span>
-        <span style={{ fontSize:11,color:"#3a3a5a" }}>sélecteur collaboratif</span>
+        <span style={{ fontSize:11,color:"#9A9080" }}>sélecteur collaboratif</span>
         <div style={{ marginLeft:"auto",display:"flex",alignItems:"center",gap:10 }}>
-          <button onClick={()=>setShowPeople(true)} style={{ display:"flex",alignItems:"center",gap:7,background:"transparent",border:"1px solid #1e1e30",borderRadius:20,padding:"5px 14px 5px 8px",cursor:"pointer" }}>
-            <div style={{ display:"flex" }}>{safePeople.slice(0,4).map((p,i)=><Avatar key={p.id} name={p.name} color={p.color} size={22} style={{ marginLeft:i?-7:0,border:"2px solid #0a0a18" }} />)}{safePeople.length>4&&<div style={{ width:22,height:22,borderRadius:"50%",background:"#1e1e30",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#888",marginLeft:-7,border:"2px solid #0a0a18" }}>+{safePeople.length-4}</div>}</div>
+          <button onClick={()=>setShowPeople(true)} style={{ display:"flex",alignItems:"center",gap:7,background:"transparent",border:"1px solid #E8E2D8",borderRadius:20,padding:"5px 14px 5px 8px",cursor:"pointer" }}>
+            <div style={{ display:"flex" }}>{safePeople.slice(0,4).map((p,i)=><Avatar key={p.id} name={p.name} color={p.color} size={22} style={{ marginLeft:i?-7:0,border:"2px solid #0a0a18" }} />)}{safePeople.length>4&&<div style={{ width:22,height:22,borderRadius:"50%",background:"#EAE4D8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:"#888",marginLeft:-7,border:"2px solid #0a0a18" }}>+{safePeople.length-4}</div>}</div>
             <span style={{ fontSize:11,color:"#888",fontWeight:600 }}>{safePeople.length} amis</span>
             <span style={{ fontSize:10,color:"#444",marginLeft:1 }}>✎</span>
           </button>
-          <div style={{ display:"flex",alignItems:"center",gap:4,background:"#0e0e1e",borderRadius:20,padding:"4px 12px 4px 6px" }}>
+          <div style={{ display:"flex",alignItems:"center",gap:4,background:"#F5F2EE",borderRadius:20,padding:"4px 12px 4px 6px" }}>
             <span style={{ fontSize:10,color:"#555" }}>Je suis :</span>
             {safePeople.filter(p=>!trip||trip.members.some(m=>m.personId===p.id)).map(p=><button key={p.id} onClick={()=>setCurrentUserId(p.id)} title={p.name} style={{ background:"none",border:`2px solid ${currentUserId===p.id?p.color:"transparent"}`,borderRadius:"50%",padding:0,cursor:"pointer",lineHeight:0 }}><Avatar name={p.name} color={p.color} size={24} /></button>)}
             {currentPerson&&<span style={{ fontSize:12,color:currentPerson.color,fontWeight:600,marginLeft:4 }}>{currentPerson.name}</span>}
@@ -933,32 +933,32 @@ export default function App() {
       {/* Body */}
       <div style={{ flex:1,display:"flex",minHeight:0 }}>
         {/* Sidebar */}
-        <div style={{ width:216,background:"#08080f",borderRight:"1px solid #10101e",display:"flex",flexDirection:"column",flexShrink:0,overflowY:"auto" }}>
-          <div style={{ padding:"12px 14px 6px",fontSize:9,color:"#2a2a3e",textTransform:"uppercase",letterSpacing:2,fontWeight:700 }}>Mes séjours</div>
+        <div style={{ width:216,background:"#F4F1EC",borderRight:"1px solid #E8E2D8",display:"flex",flexDirection:"column",flexShrink:0,overflowY:"auto" }}>
+          <div style={{ padding:"12px 14px 6px",fontSize:9,color:"#C5BFAA",textTransform:"uppercase",letterSpacing:2,fontWeight:700 }}>Mes séjours</div>
           {safeTrips.filter(t=>t.members.some(m=>m.personId===currentUserId)).map(t=>{
             const isA=t.id===activeTrip, pe=pendingCount(t);
             return (
-              <div key={t.id} onClick={()=>setActiveTrip(t.id)} style={{ margin:"0 6px 3px",padding:"9px 10px",borderRadius:11,cursor:"pointer",background:isA?"#141428":"transparent",border:`1px solid ${isA?"#c9a96e33":"transparent"}`,position:"relative" }} onMouseEnter={e=>{ if(!isA)e.currentTarget.style.background="#0e0e1e"; }} onMouseLeave={e=>{ if(!isA)e.currentTarget.style.background="transparent"; }}>
+              <div key={t.id} onClick={()=>setActiveTrip(t.id)} style={{ margin:"0 6px 3px",padding:"9px 10px",borderRadius:11,cursor:"pointer",background:isA?"#141428":"transparent",border:`1px solid ${isA?"#c9a96e33":"transparent"}`,position:"relative" }} onMouseEnter={e=>{ if(!isA)e.currentTarget.style.background="#F0ECE4"; }} onMouseLeave={e=>{ if(!isA)e.currentTarget.style.background="transparent"; }}>
                 <div style={{ display:"flex",gap:8,alignItems:"flex-start" }}>
                   <span style={{ fontSize:20,lineHeight:1,flexShrink:0 }}>{t.emoji}</span>
                   <div style={{ flex:1,minWidth:0 }}>
                     <div style={{ fontSize:12,fontWeight:700,color:isA?"#f0e6d3":"#777",fontFamily:"'Cormorant Garamond',serif",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>{t.name}</div>
-                    {t.dates&&<div style={{ fontSize:10,color:"#3a3a5a",marginTop:1 }}>{t.dates}</div>}
+                    {t.dates&&<div style={{ fontSize:10,color:"#9A9080",marginTop:1 }}>{t.dates}</div>}
                     <div style={{ display:"flex",alignItems:"center",gap:4,marginTop:5,flexWrap:"wrap" }}>
-                      <span style={{ fontSize:9,color:"#3a3a5a" }}>{t.properties.length} logement{t.properties.length!==1?"s":""}</span>
+                      <span style={{ fontSize:9,color:"#9A9080" }}>{t.properties.length} logement{t.properties.length!==1?"s":""}</span>
                       <span style={{ color:"#1a1a28",fontSize:9 }}>·</span>
                       <div style={{ display:"flex",alignItems:"center",gap:2 }}>
-                        <div style={{ display:"flex" }}>{t.members.slice(0,3).map((m,i)=>{ const u=person(m.personId); return u?<Avatar key={m.personId} name={u.name} color={u.color} size={14} style={{ marginLeft:i?-4:0,border:`1.5px solid ${m.status==="declined"?"#f87171":"#08080f"}`,opacity:m.status==="declined"?.4:1 }} />:null; })}{t.members.length>3&&<div style={{ width:14,height:14,borderRadius:"50%",background:"#1e1e30",fontSize:8,color:"#888",display:"flex",alignItems:"center",justifyContent:"center",marginLeft:-4 }}>+{t.members.length-3}</div>}</div>
+                        <div style={{ display:"flex" }}>{t.members.slice(0,3).map((m,i)=>{ const u=person(m.personId); return u?<Avatar key={m.personId} name={u.name} color={u.color} size={14} style={{ marginLeft:i?-4:0,border:`1.5px solid ${m.status==="declined"?"#f87171":"#08080f"}`,opacity:m.status==="declined"?.4:1 }} />:null; })}{t.members.length>3&&<div style={{ width:14,height:14,borderRadius:"50%",background:"#EAE4D8",fontSize:8,color:"#888",display:"flex",alignItems:"center",justifyContent:"center",marginLeft:-4 }}>+{t.members.length-3}</div>}</div>
                         {pe>0&&<span style={{ fontSize:9,color:"#fbbf24" }}>{pe}⏳</span>}
                       </div>
                     </div>
                   </div>
                 </div>
-                {safeTrips.length>1&&<button onClick={e=>{e.stopPropagation();deleteTrip(t.id);}} style={{ position:"absolute",top:6,right:6,background:"none",border:"none",color:"#2a2a3e",cursor:"pointer",fontSize:14,lineHeight:1,padding:"0 2px" }} onMouseEnter={e=>e.currentTarget.style.color="#f87171"} onMouseLeave={e=>e.currentTarget.style.color="#2a2a3e"}>×</button>}
+                {safeTrips.length>1&&<button onClick={e=>{e.stopPropagation();deleteTrip(t.id);}} style={{ position:"absolute",top:6,right:6,background:"none",border:"none",color:"#C5BFAA",cursor:"pointer",fontSize:14,lineHeight:1,padding:"0 2px" }} onMouseEnter={e=>e.currentTarget.style.color="#f87171"} onMouseLeave={e=>e.currentTarget.style.color="#2a2a3e"}>×</button>}
               </div>
             );
           })}
-          <button onClick={()=>setShowNewTrip(true)} style={{ margin:"6px 6px 14px",padding:"8px 10px",borderRadius:11,cursor:"pointer",background:"transparent",border:"1px dashed #1a1a28",color:"#3a3a5a",fontSize:11,fontFamily:"inherit",fontWeight:600,display:"flex",alignItems:"center",gap:5 }} onMouseEnter={e=>{e.currentTarget.style.borderColor="#c9a96e44";e.currentTarget.style.color="#c9a96e88";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#1a1a28";e.currentTarget.style.color="#3a3a5a";}}>
+          <button onClick={()=>setShowNewTrip(true)} style={{ margin:"6px 6px 14px",padding:"8px 10px",borderRadius:11,cursor:"pointer",background:"transparent",border:"1px dashed #D5CFCA",color:"#9A9080",fontSize:11,fontFamily:"inherit",fontWeight:600,display:"flex",alignItems:"center",gap:5 }} onMouseEnter={e=>{e.currentTarget.style.borderColor="#c9a96e44";e.currentTarget.style.color="#c9a96e88";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="#1a1a28";e.currentTarget.style.color="#3a3a5a";}}>
             <span style={{ fontSize:14 }}>+</span> Nouveau séjour
           </button>
         </div>
@@ -967,7 +967,7 @@ export default function App() {
         <div style={{ flex:1,display:"flex",flexDirection:"column",minWidth:0 }}>
           {trip?(
             <>
-              <div style={{ padding:"10px 18px",background:"#0a0a18",borderBottom:"1px solid #141428",display:"flex",alignItems:"center",gap:12,flexShrink:0,flexWrap:"wrap" }}>
+              <div style={{ padding:"10px 18px",background:"#FFFFFF",borderBottom:"1px solid #E8E2D8",display:"flex",alignItems:"center",gap:12,flexShrink:0,flexWrap:"wrap" }}>
                 <span style={{ fontSize:26 }}>{trip.emoji}</span>
                 <TripHeaderEdit trip={trip} onUpdate={updateTrip} />
                 <div style={{ marginLeft:"auto",display:"flex",alignItems:"center",gap:8,flexWrap:"wrap" }}>
